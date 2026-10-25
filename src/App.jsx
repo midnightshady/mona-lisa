@@ -322,12 +322,7 @@ const startMusic = () => {
 
           <button
             onClick={() => {
-              if (audioRef.current) {
-                audioRef.current.currentTime = 20;
-
-                audioRef.current.play().catch(() => {});
-              }
-
+              startMusic();
               setScreen("vibe");
             }}
           >
