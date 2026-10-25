@@ -182,3 +182,198 @@
     border-right-color: var(--border);
   }
 }
+
+
+/* ===== Misbah's Virtual Bouquet ===== */
+
+.bouquet-screen {
+  min-height: 100vh;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 18px;
+  background:
+    radial-gradient(ellipse at top, #fff0f4 0%, transparent 60%),
+    linear-gradient(145deg, #fff8f5, #f9e3eb);
+  color: #704354;
+  text-align: center;
+  overflow: hidden;
+}
+
+.bouquet-card {
+  width: 100%;
+  max-width: 480px;
+  padding: 30px 24px;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  border-radius: 28px;
+  background: rgba(255, 255, 255, 0.68);
+  box-shadow: 0 20px 70px rgba(164, 91, 119, 0.15);
+  animation: bouquetAppear 0.9s ease both;
+}
+
+.bouquet-eyebrow {
+  font-size: 12px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #b66f89;
+}
+
+.bouquet-card h1 {
+  margin: 12px 0 0;
+  font-family: Georgia, serif;
+  font-size: clamp(36px, 8vw, 52px);
+  font-weight: 400;
+  color: #9e526e;
+}
+
+.bouquet-art {
+  width: 100%;
+  max-width: 320px;
+  margin: 0 auto;
+  animation: bouquetFloat 3s ease-in-out infinite;
+}
+
+.bouquet-art svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.bouquet-card h2 {
+  margin: 4px 0 12px;
+  font-family: Georgia, serif;
+  font-size: 23px;
+  font-weight: 400;
+}
+
+.bouquet-message {
+  max-width: 340px;
+  margin: 0 auto 24px;
+  color: #896b76;
+  font-size: 15px;
+  line-height: 1.8;
+}
+
+.bouquet-button {
+  border: none;
+  border-radius: 999px;
+  padding: 14px 25px;
+  background: #b96886;
+  color: white;
+  font: inherit;
+  font-size: 14px;
+  cursor: pointer;
+  box-shadow: 0 7px 20px rgba(185, 104, 134, 0.22);
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.bouquet-button:hover {
+  background: #a65373;
+  transform: translateY(-2px);
+}
+
+@keyframes bouquetFloat {
+  0%, 100% { transform: translateY(0) rotate(-1deg); }
+  50% { transform: translateY(-8px) rotate(1deg); }
+}
+
+@keyframes bouquetAppear {
+  from { opacity: 0; transform: translateY(18px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bouquet-art,
+  .bouquet-card {
+    animation: none;
+  }
+}
+
+/* Romantic bouquet reveal sequence */
+
+.bouquet-stems {
+  stroke-dasharray: 260;
+  stroke-dashoffset: 260;
+  animation: growStems 1.5s ease-out 0.5s forwards;
+}
+
+.bouquet-leaves {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: leavesAppear 0.7s ease-out 1.8s forwards;
+}
+
+
+.bouquet-flowers > g {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: flowerBloom 0.8s cubic-bezier(.2, 1.5, .5, 1) both;
+}
+
+
+.bouquet-flowers > g:nth-child(1) { animation-delay: 2.1s; }
+.bouquet-flowers > g:nth-child(2) { animation-delay: 2.5s; }
+.bouquet-flowers > g:nth-child(3) { animation-delay: 2.9s; }
+.bouquet-flowers > g:nth-child(4) { animation-delay: 3.3s; }
+.bouquet-flowers > g:nth-child(5) { animation-delay: 3.7s; }
+
+.bouquet-filler {
+  opacity: 0;
+  animation: softReveal 0.8s ease 3.8s forwards;
+}
+
+.bouquet-wrap {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center bottom;
+  animation: wrapReveal 0.9s ease-out 4s forwards;
+}
+
+.bouquet-ribbon {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: flowerBloom 0.7s ease-out 4.6s forwards;
+}
+
+@keyframes growStems {
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes leavesAppear {
+  from { opacity: 0; transform: scale(0.3); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes flowerBloom {
+  from { opacity: 0; transform: scale(0.1); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes softReveal {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes wrapReveal {
+  from { opacity: 0; transform: scaleY(0.2); }
+  to { opacity: 1; transform: scaleY(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bouquet-stems,
+  .bouquet-leaves,
+  .bouquet-flowers > g,
+  .bouquet-filler,
+  .bouquet-wrap,
+  .bouquet-ribbon {
+    animation: none;
+    opacity: 1;
+    stroke-dashoffset: 0;
+    transform: none;
+  }
+}

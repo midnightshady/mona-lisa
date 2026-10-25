@@ -4,8 +4,172 @@ function Butterfly() {
   return <div className="butterfly">🦋</div>;
 }
 
+
+function AnimatedBouquet() {
+  return (
+    <div className="bouquet-art" aria-label="A bouquet of flowers">
+      <svg viewBox="0 0 320 320" role="img">
+        <defs>
+          <linearGradient id="bouquetPaper" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor="#ffe4e8" />
+            <stop offset="100%" stopColor="#dba1b4" />
+          </linearGradient>
+        </defs>
+
+        {/* Stems */}
+        <g
+          className="bouquet-stems"
+          stroke="#527c55"
+          strokeWidth="4"
+          strokeLinecap="round"
+          fill="none"
+        >
+          <path d="M160 270 Q125 190 83 112" />
+          <path d="M160 270 Q160 180 155 88" />
+          <path d="M160 270 Q205 180 237 118" />
+          <path d="M160 270 Q110 210 115 145" />
+          <path d="M160 270 Q200 210 202 150" />
+        </g>
+
+        {/* Leaves */}
+        <g fill="#83aa79">
+          <ellipse cx="111" cy="206" rx="10" ry="23" transform="rotate(-48 111 206)" />
+          <ellipse cx="199" cy="211" rx="10" ry="24" transform="rotate(48 199 211)" />
+          <ellipse cx="127" cy="238" rx="9" ry="20" transform="rotate(-55 127 238)" />
+          <ellipse cx="188" cy="239" rx="9" ry="20" transform="rotate(55 188 239)" />
+        </g>
+
+        {/* Flower heads */}
+        <g>
+          {[
+            [83, 105, "#f3a8ba"],
+            [155, 78, "#fff0c5"],
+            [237, 111, "#e8a0c0"],
+            [114, 137, "#fff0f2"],
+            [204, 143, "#f6bfd0"]
+          ].map(([x, y, color], index) => (
+            <g key={index} transform={`translate(${x} ${y})`}>
+              {Array.from({ length: 8 }, (_, i) => (
+                <ellipse
+                  key={i}
+                  cx="0"
+                  cy="-14"
+                  rx="8"
+                  ry="14"
+                  fill={color}
+                  transform={`rotate(${i * 45})`}
+                />
+              ))}
+              <circle r="8" fill="#dba34c" />
+              <circle r="3" fill="#fff0b8" />
+            </g>
+          ))}
+        </g>
+
+        {/* Tiny filler flowers */}
+        <g fill="#fff2cf">
+          <circle cx="110" cy="94" r="4" />
+          <circle cx="218" cy="88" r="4" />
+          <circle cx="184" cy="108" r="4" />
+          <circle cx="137" cy="112" r="4" />
+          <circle cx="254" cy="142" r="4" />
+        </g>
+
+        {/* Bouquet wrapping */}
+        <path
+          d="M75 165 Q160 205 245 165 L204 284 Q160 305 116 284 Z"
+          fill="url(#bouquetPaper)"
+          stroke="#c889a0"
+          strokeWidth="2"
+        />
+        <path
+          d="M160 204 L160 293"
+          stroke="#fff1f3"
+          strokeWidth="2"
+          opacity=".8"
+        />
+
+        {/* Ribbon */}
+        <path
+          d="M160 251 C130 226 119 257 155 265
+             C120 288 145 296 160 269
+             C177 296 200 285 166 265
+             C202 251 185 227 160 251 Z"
+          fill="#b85c80"
+        />
+        <circle cx="160" cy="262" r="7" fill="#f6c7d5" />
+      </svg>
+    </div>
+  );
+}
+
+function BouquetScreen({ onContinue }) {
+  return (
+    <main className="bouquet-screen">
+      <div className="bouquet-card">
+        <p className="bouquet-eyebrow">a little something for you ♡</p>
+
+        <h1>Hi, Misbah.</h1>
+
+        <AnimatedBouquet />
+
+        <h2>I made this bouquet for you.</h2>
+
+        <p className="bouquet-message">
+          If I could, I'd give you these flowers in person.
+          Until then, here's a little piece of my heart. 🌷
+        </p>
+
+        <button className="bouquet-button" onClick={onContinue}>
+          Take your bouquet ♡
+        </button>
+      </div>
+    </main>
+  );
+}
+
 function App() {
-  const audioRef = useRef(null);
+  
+const audioRef = useRef(null);
+
+useEffect(() => {
+  const audio = document.getElementById("background-music");
+  if (!audio) return;
+
+  audioRef.current = audio;
+  audio.volume = 0.08;
+
+  const tryPlay = () => {
+    if (audio.paused) {
+      audio.play().catch(() => {});
+    }
+  };
+
+  // Try autoplay when the page loads.
+  tryPlay();
+
+  // Browsers may require a user interaction first.
+  document.addEventListener("pointerdown", tryPlay);
+
+  return () => {
+    document.removeEventListener("pointerdown", tryPlay);
+  };
+}, []);
+
+
+const [musicStarted, setMusicStarted] = useState(false);
+
+const startMusic = () => {
+  const audio = audioRef.current;
+  if (!audio || musicStarted) return;
+
+  audio.volume = 0.1;
+
+  audio.play()
+    .then(() => setMusicStarted(true))
+    .catch(() => {});
+};
+
 
   const [screen, setScreen] = useState("intro");
   const [vibe, setVibe] = useState("");
@@ -79,10 +243,18 @@ function App() {
   // SELF DESTRUCT SCREEN
   // -----------------------------
 
+  if (screen === "bouquet") {
+    return (
+      <BouquetScreen
+        onContinue={() => setScreen("goodbye")}
+      />
+    );
+  }
+
   if (screen === "goodbye") {
     return (
       <>
-        <audio ref={audioRef} src="/song.mp3" loop />
+        {/* <audio ref={audioRef} src="/song.mp3" loop /> */}
 
         <Butterfly />
 
@@ -141,7 +313,7 @@ function App() {
           </div>
 
           <h1>
-            Since I can't come to Assam rn...
+            Since I can't come to Mankhurd rn...
           </h1>
 
           <p>
@@ -492,7 +664,7 @@ function App() {
 
           <div className="photo-card">
             <img
-              src="/photo-1.jpeg"
+              src="/photo1.jpeg"
               alt="A little memory"
             />
 
@@ -501,7 +673,7 @@ function App() {
 
           <div className="photo-card">
             <img
-              src="/photo-2.jpeg"
+              src="/photo2.jpeg"
               alt="A little memory"
             />
 
@@ -510,7 +682,7 @@ function App() {
 
           <div className="photo-card">
             <img
-              src="/photo-3.jpeg"
+              src="/photo3.jpeg"
               alt="A little memory"
             />
 
@@ -519,7 +691,7 @@ function App() {
 
           <div className="photo-card">
             <img
-              src="/photo-4.jpeg"
+              src="/photo4.jpeg"
               alt="A little memory"
             />
 
@@ -534,7 +706,7 @@ function App() {
             </div>
 
             <h1>
-              Since I can't come to Assam rn...
+              Since I can't come to Mankhurd rn...
             </h1>
 
             <p>
@@ -552,14 +724,14 @@ function App() {
             <p>
               Until then...
               <br />
-              don't miss me too much. :)
+              don't miss me too much. :
             </p>
 
-            <button
-              onClick={() => setScreen("goodbye")}
-            >
-              Okay, I'm done <span>→</span>
+            
+            <button onClick={() => setScreen("bouquet")}>
+              Wait... I made you something ♡ →
             </button>
+
           </div>
         </main>
       </>
